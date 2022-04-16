@@ -1,0 +1,6 @@
+{
+    "port": "COM13",
+    "configuration": "cpu=atmega328",
+    "board": "arduino:avr:nano",
+    "sketch": "Solar-Tracker.ino"
+}
