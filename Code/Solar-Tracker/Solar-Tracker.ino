@@ -8,6 +8,32 @@ Stepper myStepper = Stepper(3000, 2, 4, 3, 5); // Pins entered in sequence IN1-I
 int x_pt[] = {A0, A1, A3, A2}; // NW NE SE SW
 int lastPos[2] = {0, 0};
 
+int y_pt[] = {A5, A4}; // LOWER UPPER
+int lastAngle = 0;
+
+void writeServo(int pos)
+{
+  if (lastAngle > pos)
+  {
+    for (int i = lastAngle; i >= pos; i--)
+    {
+      servo.write(i);
+      delay(15);
+    }
+  }
+  else
+  {
+    for (int i = pos; i <= lastAngle; i++)
+    {
+      servo.write(i);
+      delay(15);
+    }
+  }
+
+  EEPROM.write(1, pos);
+  lastAngle = pos;
+}
+
 void setup()
 {
   Serial.begin(9600);
@@ -16,12 +42,15 @@ void setup()
 
   myStepper.setSpeed(10);
 
-  int prevVal = EEPROM.read(0);
-  EEPROM.write(0, 0);
-  myStepper.step(prevVal * 750);
+  // int prevVal = EEPROM.read(0);
+  // EEPROM.write(0, 0);
+  // myStepper.step(prevVal * 750);
 
   servo.attach(9);
-  servo.write(0);
+
+  lastAngle = EEPROM.read(1);
+  writeServo(30);
+  lastAngle = 30;
 }
 
 void loop()
@@ -68,5 +97,20 @@ void loop()
   else
     EEPROM.write(0, G_pt[0]);
 
-  delay(2500);
+  if (analogRead(y_pt[1]) > analogRead(y_pt[0]))
+  {
+    if (analogRead(y_pt[1]) - analogRead(y_pt[0]) <= 10)
+      writeServo(30);
+    else
+      writeServo(60);
+  }
+  else if (analogRead(y_pt[0]) > analogRead(y_pt[1]))
+  {
+    if (analogRead(y_pt[0]) - analogRead(y_pt[1]) <= 10)
+      writeServo(30);
+    else
+      writeServo(0);
+  }
+
+  delay(1000);
 }
