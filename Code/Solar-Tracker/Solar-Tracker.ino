@@ -18,7 +18,7 @@ void writeServo(int pos)
     for (int i = lastAngle; i >= pos; i--)
     {
       servo.write(i);
-      delay(15);
+      delay(25);
     }
   }
   else
@@ -26,7 +26,7 @@ void writeServo(int pos)
     for (int i = pos; i <= lastAngle; i++)
     {
       servo.write(i);
-      delay(15);
+      delay(25);
     }
   }
 
@@ -42,9 +42,9 @@ void setup()
 
   myStepper.setSpeed(10);
 
-  // int prevVal = EEPROM.read(0);
-  // EEPROM.write(0, 0);
-  // myStepper.step(prevVal * 750);
+  int prevVal = EEPROM.read(0);
+  EEPROM.write(0, 0);
+  myStepper.step(prevVal * 750);
 
   servo.attach(9);
 
