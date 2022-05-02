@@ -40,7 +40,7 @@ void setup()
   for (int i = 0; i <= 3; i++)
     pinMode(x_pt[i], INPUT);
 
-  myStepper.setSpeed(10);
+  myStepper.setSpeed(2);
 
   int prevVal = EEPROM.read(0);
   EEPROM.write(0, 0);
